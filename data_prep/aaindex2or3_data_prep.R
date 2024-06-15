@@ -3,7 +3,7 @@ library(tidyr)
 # Wczytanie danych
 aaindex2_file_name <- "data/intermediate_data/extracted_values_aaindex2.csv"
 aaindex3_file_name <- "data/intermediate_data/extracted_values_aaindex3.csv"
-input_data <- read.csv(aaindex2_file_name, header = FALSE)
+input_data <- read.csv(aaindex3_file_name, header = FALSE)
 
 # Konwersja danych wejściowych do odpowiedniego formatu
 input_data$V21 <- NULL
@@ -55,4 +55,4 @@ output_data <- drop_na(output_data)
 # Zapis do pliku
 aaindex2_out_file_path <- "data/intermediate_data/aaindex2_encoding_matrix.csv"
 aaindex3_out_file_path <- "data/intermediate_data/aaindex3_encoding_matrix.csv"
-write.table(output_data, file = aaindex2_out_file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(output_data, file = aaindex3_out_file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
