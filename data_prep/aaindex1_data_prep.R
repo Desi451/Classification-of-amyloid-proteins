@@ -1,3 +1,5 @@
+library(tidyr)
+
 file_path_read <- "data/raw_data/aaindex1"
 
 lines <- readLines(file_path_read)
@@ -25,5 +27,6 @@ for (line_number in 1:lines_length) {
     }
 }
 
+encoding_matrix <- drop_na(encoding_matrix)
 file_path_save <- "data/intermediate_data/encoding_matrix_aaindex1.csv"
 write.table(encoding_matrix, file = file_path_save, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)

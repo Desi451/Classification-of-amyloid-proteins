@@ -4,7 +4,7 @@ library(caret)
 library(pROC)
 
 data_frame <- read.csv2("data/final_data/final_data_encoded.csv", sep = ";", dec = "." , header = TRUE)
-
+# str(data_frame, list.len = 6000)
 set.seed(103)
 
 data_frame$Classification <- ifelse(data_frame$Classification == "amyloid", "amyloid", 'non_amyloid')
