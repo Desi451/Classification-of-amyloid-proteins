@@ -3,22 +3,18 @@ library(e1071)
 library(caret)
 library(pROC)
 
-data <- read.csv2("data/final_data/encoded_hexapeptide_data.csv")
-
-data_frame <- data.frame(data)
-
-short_data <- data_frame[, 2:ncol(data_frame)]
+data_frame <- read.csv2("data/final_data/final_data_encoded.csv", sep = ";", dec = "." , header = TRUE)
 
 set.seed(103)
 
-short_data$Classification <- ifelse(short_data$Classification == "amyloid", "amyloid", 'non_amyloid')
-short_data$Classification <- factor(short_data$Classification, levels = c("non_amyloid", "amyloid"))
-split <- sample.split(short_data$Classification, SplitRatio = 0.75)
+data_frame$Classification <- ifelse(data_frame$Classification == "amyloid", "amyloid", 'non_amyloid')
+data_frame$Classification <- factor(data_frame$Classification, levels = c("non_amyloid", "amyloid"))
+split <- sample.split(data_frame$Classification, SplitRatio = 0.75)
 
-training_set <- subset(short_data, split == TRUE)
-test_set <- subset(short_data, split == FALSE)
+training_set <- subset(data_frame, split == TRUE)
+test_set <- subset(data_frame, split == FALSE)
 
-print(nrow(short_data))
+print(nrow(data_frame))
 print(nrow(training_set))
 print(nrow(test_set))
 
