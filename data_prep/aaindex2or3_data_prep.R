@@ -3,7 +3,7 @@ library(tidyr)
 # Wczytanie danych
 aaindex2_file_name <- "data/intermediate_data/extracted_values_aaindex2.csv"
 aaindex3_file_name <- "data/intermediate_data/extracted_values_aaindex3.csv"
-input_data <- read.csv(aaindex3_file_name, header = FALSE)
+input_data <- read.csv(aaindex2_file_name, header = FALSE)
 
 # Konwersja danych wejściowych do odpowiedniego formatu
 input_data$V21 <- NULL
@@ -13,7 +13,7 @@ rownames(input_data) <- NULL
 
 # Generacja i zmiana nazw kolumn tabeli wyjściowej
 output_data <- data.frame(matrix(nrow = 0, ncol = 400))
-aminoacid_names <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+aminoacid_names <- c("a", "r", "n", "d", "c", "q", "e", "g", "h", "i", "l", "k", "m", "f", "p", "s", "t", "w", "y", "v")
 col_names <- c()
 for (i in aminoacid_names) {
     for (j in aminoacid_names) {
@@ -55,4 +55,4 @@ output_data <- drop_na(output_data)
 # Zapis do pliku
 aaindex2_out_file_path <- "data/intermediate_data/aaindex2_encoding_matrix.csv"
 aaindex3_out_file_path <- "data/intermediate_data/aaindex3_encoding_matrix.csv"
-write.table(output_data, file = aaindex3_out_file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(output_data, file = aaindex2_out_file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)

@@ -50,7 +50,6 @@ encode_pairs <- TRUE
 if (encode_pairs) {
     pairs_separated <- data_to_encode[, 8:12]
     for (i in seq_len(nrow(pairs_separated))) {
-        print(i)
         for (j in seq_len(ncol(pairs_separated))) {
             beginning_of_insertion <- j * coding_vector_pairs_length - coding_vector_pairs_length + 1
             end_of_insertion <- j * coding_vector_pairs_length
@@ -60,3 +59,12 @@ if (encode_pairs) {
     }
     rm(i, j, beginning_of_insertion, end_of_insertion)
 }
+
+# Łączenie wyników kodowań
+out_data <- data_to_encode[, 1]
+out_data <- cbind(out_data, encoded_aminoacids_df)
+out_data <- cbind(out_data, encoded_aminoacids_pairs_df)
+
+# Zapis do pliku
+file_path <- "data/final_data/final_data_encoded.csv"
+write.table(out_data, file = file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)

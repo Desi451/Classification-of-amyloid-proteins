@@ -30,11 +30,11 @@ for (i in seq_len(nrow(hexapeptide_df))) {
     aminoacid_vector <- strsplit(sequence, "")[[1]]
     
     # Adding individual aminoacids
-    hexapeptide_with_pairs_df[i, 2:7] <- aminoacid_vector[1:6]
+    hexapeptide_with_pairs_df[i, 2:7] <- tolower(aminoacid_vector[1:6])
     
     # Adding pairs of aminoacids
     for (j in 1:5) {
-        hexapeptide_with_pairs_df[i, j+7] <- paste0(aminoacid_vector[j], aminoacid_vector[j+1])
+        hexapeptide_with_pairs_df[i, j+7] <- tolower(paste0(aminoacid_vector[j], aminoacid_vector[j+1]))
     }
 }
 

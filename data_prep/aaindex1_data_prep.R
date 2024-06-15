@@ -4,8 +4,8 @@ lines <- readLines(file_path_read)
 
 encoding_matrix <- data.frame(matrix(nrow = 0, ncol = 20))
 colnames(encoding_matrix) <- c(
-    "A", "R", "N", "D", "C", "Q", "E", "G", "H", "I",
-    "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+    "a", "r", "n", "d", "c", "q", "e", "g", "h", "i",
+    "l", "k", "m", "f", "p", "s", "t", "w", "y", "v")
 
 lines_length <- length(lines)
 for (line_number in 1:lines_length) {
