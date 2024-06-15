@@ -1,6 +1,6 @@
 # Reading data
 
-hexapeptide_data <- read.csv2("data/waltzdb_export(csv).csv")
+hexapeptide_data <- read.csv2("data/raw_data/waltzdb_export(csv).csv")
 hexapeptide_df <- data.frame(hexapeptide_data)
 
 # Removing hexapeptides with missing amino acids data
@@ -69,6 +69,6 @@ encoded_hexapeptide_df <- cbind(encoded_hexapeptide_df, encoded_aminoacids_df)
 
 # Saving data
 
-file_path <- "data/encoded_hexapeptide_data.csv"
+file_path <- "data/final_data/encoded_hexapeptide_data.csv"
 write.table(encoded_hexapeptide_df, file = file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
 rm(file_path)

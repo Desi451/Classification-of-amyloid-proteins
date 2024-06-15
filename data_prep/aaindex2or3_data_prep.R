@@ -1,5 +1,5 @@
 # Ścieżka do pliku tekstowego
-file_path <- "data/aaindex2.txt"
+file_path <- "data/raw_data/aaindex2.txt"
 
 # Odczytanie pliku linia po linii
 lines <- readLines(file_path)
@@ -63,9 +63,9 @@ process_section <- function(section) {
 all_data <- do.call(rbind, lapply(extracted_sections, process_section))
 
 # Ścieżka do pliku CSV
-output_csv_path <- "data/extracted_values_aaindex2.csv"
+output_csv_path <- "data/intermediate_data/extracted_values_aaindex2.csv"
 
 # Zapisanie do pliku CSV
-write.csv(all_data, file = output_csv_path, row.names = FALSE)
+write.csv(all_data, file = output_csv_path, row.names = FALSE, col.names = FALSE)
 
 cat("Wyodrębnione dane zostały zapisane do pliku:", output_csv_path)

@@ -1,5 +1,5 @@
 # Reading data
-hexapeptide_data <- read.csv2("data/waltzdb_export(csv).csv")
+hexapeptide_data <- read.csv2("data/raw_data/waltzdb_export(csv).csv")
 hexapeptide_df <- data.frame(hexapeptide_data)
 
 # Removing hexapeptides with missing amino acids data
@@ -38,5 +38,5 @@ for (i in seq_len(nrow(hexapeptide_df))) {
     }
 }
 
-file_path <- "data/amino_with_pairs.csv"
-write.csv(hexapeptide_with_pairs_df, file = file_path, row.names = FALSE, col.names = TRUE, quote = FALSE)
+file_path <- "data/intermediate_data/amino_with_pairs.csv"
+write.table(hexapeptide_with_pairs_df, file = file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)

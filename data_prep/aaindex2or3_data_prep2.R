@@ -1,4 +1,4 @@
-input_data <- read.csv("data/extracted_values_aaindex2.csv", header = FALSE)
+input_data <- read.csv("data/intermediate_data/extracted_values_aaindex2.csv", header = FALSE)
 
 output_data <- array(list(), dim = c(20, 20), dimnames = list(NULL, NULL))
 
@@ -45,14 +45,14 @@ for (i in 2:nrow(input_data)) {
     }
 }
 
-write.csv(output_data, "data/output_data_aaindex2.csv", row.names = FALSE)
+write.table(output_data, file = "data/intermediate_data/output_data_aaindex2.csv", sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
 
-# alternatywa
+# # alternatywa
 
-# Otwieranie pliku do zapisu
+# # Otwieranie pliku do zapisu
 # file <- file("output_data.csv", "w")
 
-# Iteracja przez każdy element listy i zapisywanie go jako osobny wiersz
+# # Iteracja przez każdy element listy i zapisywanie go jako osobny wiersz
 # for (i in 1:20) {
 #  for (j in 1:20) {
 #    if (length(output_data[[i, j]]) > 0) {
@@ -61,5 +61,5 @@ write.csv(output_data, "data/output_data_aaindex2.csv", row.names = FALSE)
 #  }
 # }
 
-# Zamykanie pliku
+# # Zamykanie pliku
 # close(file)

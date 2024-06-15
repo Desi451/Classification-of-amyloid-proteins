@@ -3,7 +3,7 @@ library(e1071)
 library(caret)
 library(pROC)
 
-data <- read.csv2("data/encoded_hexapeptide_data.csv")
+data <- read.csv2("data/final_data/encoded_hexapeptide_data.csv")
 
 data_frame <- data.frame(data)
 

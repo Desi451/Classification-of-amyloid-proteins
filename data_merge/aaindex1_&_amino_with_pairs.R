@@ -1,9 +1,9 @@
 # Wczytanie danych
-hexapeptide_with_pairs <- read.csv2("data/amino_with_pairs.csv", header = TRUE)
+hexapeptide_with_pairs <- read.csv2("data/intermediate_data/amino_with_pairs.csv", header = TRUE)
 pairs_df <- data.frame(hexapeptide_with_pairs)
 
 # Wczytanie danych z pliku CSV
-aaindex1_data <- read.csv2("data/encoding_matrix_aaindex1.csv", header = TRUE)
+aaindex1_data <- read.csv2("data/intermediate_data/encoding_matrix_aaindex1.csv", header = TRUE)
 
 # Funkcja do wyciągania znaków od 2 do 7 po przecinku z każdego wiersza
 get_substring <- function(row) {
@@ -38,5 +38,5 @@ for (i in 1:nrow(pairs_df)) {
 }
 
 
-file_path_save <- "data/data_ready_aaindex1.csv"
+file_path_save <- "data/final_data/data_ready_aaindex1.csv"
 write.table(output_data, file = file_path_save, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
