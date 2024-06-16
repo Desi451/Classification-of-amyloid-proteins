@@ -3,8 +3,9 @@ library(e1071)
 library(caret)
 library(pROC)
 
-data_frame <- read.csv2("data/final_data/final_data_encoded.csv", sep = ";", dec = "." , header = TRUE)
-# str(data_frame, list.len = 6000)
+data_set <- "data/final_data/final_data_encoded.csv"
+data_frame <- read.csv2(data_set, sep = ";", dec = "." , header = TRUE)
+
 set.seed(103)
 
 data_frame$Classification <- ifelse(data_frame$Classification == "amyloid", "amyloid", 'non_amyloid')
@@ -22,7 +23,7 @@ train_control <- trainControl(method = "cv", number = 10, classProbs = TRUE)
 
 svm_model <- train(Classification ~ .,
                    data = training_set,
-                   method = "svmRadial",
+                   method = "svmLinear",
                    trControl = train_control,
                    tuneLength = 10)
 
