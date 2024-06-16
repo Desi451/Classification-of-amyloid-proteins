@@ -3,8 +3,15 @@ library(e1071)
 library(caret)
 library(pROC)
 
-data_set <- "data/final_data/final_data_encoded.csv"
-data_frame <- read.csv2(data_set, sep = ";", dec = "." , header = TRUE)
+save_model <- FALSE
+
+data_path <- "data/final_data/final_data_encoded.csv"
+data_standarized_path <- "data/final_data/final_data_encoded_standarized.csv"
+data_normalized_path <- "data/final_data/final_data_encoded_normalized.csv"
+data_aaindex23_normalized_path <- "data/final_data/aaindex23_data_encoded_normalized.csv"
+data_aaindex1_normalized_path <- "data/final_data/aaindex1_data_encoded_normalized.csv"
+data_one_hot_encoded <- "data/final_data/encoded_hexapeptide_data.csv"
+data_frame <- read.csv2(data_aaindex1_normalized_path, sep = ";", dec = "." , header = TRUE)
 
 set.seed(103)
 
@@ -15,22 +22,17 @@ split <- sample.split(data_frame$Classification, SplitRatio = 0.75)
 training_set <- subset(data_frame, split == TRUE)
 test_set <- subset(data_frame, split == FALSE)
 
-print(nrow(data_frame))
-print(nrow(training_set))
-print(nrow(test_set))
-
 train_control <- trainControl(method = "cv", number = 10, classProbs = TRUE)
 
 svm_model <- train(Classification ~ .,
                    data = training_set,
                    method = "svmLinear",
                    trControl = train_control,
-                   tuneLength = 10)
+                   tuneLength = 10,
+                   tuneGrid = data.frame(C = 10))
 
 prediction <- predict(svm_model, newdata = test_set, type = "prob")
 predicted_classes <- ifelse(prediction[, 2] > 0.5, "amyloid", "non_amyloid")
-
-print(head(prediction))
 
 confusion_matrix <- table(test_set$Classification, predicted_classes)
 print(confusion_matrix)
@@ -42,3 +44,9 @@ plot(roc_object, col="red", main="ROC curve SVM")
 auc(roc_object)
 
 print(accuracy)
+
+if (save_model) {
+    model_name <- "linear_normalized_aaindex1_c10"
+    model_path <- paste("saved_models/", model_name, ".RData", sep = "")
+    save(svm_model, file = model_path)
+}

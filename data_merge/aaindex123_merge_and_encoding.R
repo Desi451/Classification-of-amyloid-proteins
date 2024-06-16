@@ -1,9 +1,29 @@
-# Wczytanie danych
+# Wczytanie danych do zakodowania
 data_to_encode <- read.csv2("data/intermediate_data/amino_with_pairs.csv")
-aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/encoding_matrix_aaindex1.csv")
-aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_encoding_matrix.csv", check.names = FALSE)
-aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_encoding_matrix.csv", check.names = FALSE)
-aaindex23_encoding_matrix <- rbind(aaindex2_encoding_matrix, aaindex3_encoding_matrix)
+
+# Wybór opcji kodowania
+standarized_encoding <- FALSE
+normalized_encoding <- TRUE
+
+# Co zakodować
+encode_aminoacids <- TRUE
+encode_pairs <- FALSE
+
+if (standarized_encoding) {
+    # Wczytanie ustandaryzowanych macierzy kodowania
+    aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/aaindex1_standarized.csv", check.names = FALSE)
+    aaindex23_encoding_matrix <- read.csv2("data/intermediate_data/aaindex23_standarized.csv", check.names = FALSE)
+} else if (normalized_encoding) {
+    # Wczytanie znormalizowanych macierzy kodowania
+    aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/aaindex1_normalized.csv", check.names = FALSE)
+    aaindex23_encoding_matrix <- read.csv2("data/intermediate_data/aaindex23_normalized.csv", check.names = FALSE)
+} else {
+    # Wczytanie macierzy kodowania 
+    aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/encoding_matrix_aaindex1.csv", check.names = FALSE)
+    aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_encoding_matrix.csv", check.names = FALSE)
+    aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_encoding_matrix.csv", check.names = FALSE)
+    aaindex23_encoding_matrix <- rbind(aaindex2_encoding_matrix, aaindex3_encoding_matrix)
+}
 
 # Inicializacja zakodowanej macierzy aminokwasów
 coding_vector_length <- nrow(aaindex1_encoding_matrix)
@@ -30,7 +50,6 @@ for (i in 1:number_of_aminoacids_pairs) {
 rm(i, j, col_name, number_of_aminoacids_pairs)
 
 # Wypełnianie zakodowanej macierzy aminokwasów
-encode_aminoacids <- TRUE
 if (encode_aminoacids) {
     aminoacids_separated <- data_to_encode[, 2:7]
     for (i in seq_len(nrow(aminoacids_separated))) {
@@ -45,8 +64,7 @@ if (encode_aminoacids) {
     rm(i, j, beginning_of_insertion, end_of_insertion)
 }
 
-# Wypełnianie zakodowanej macierzy aminokwasów
-encode_pairs <- TRUE
+# Wypełnianie zakodowanej macierzy par aminokwasów
 if (encode_pairs) {
     pairs_separated <- data_to_encode[, 8:12]
     for (i in seq_len(nrow(pairs_separated))) {
@@ -62,9 +80,29 @@ if (encode_pairs) {
 
 # Łączenie wyników kodowań
 out_data <- data.frame(Classification = data_to_encode[, 1])
-out_data <- cbind(out_data, encoded_aminoacids_df)
-out_data <- cbind(out_data, encoded_aminoacids_pairs_df)
+if (encode_aminoacids) {
+    out_data <- cbind(out_data, encoded_aminoacids_df)
+}
+if (encode_pairs) {
+    out_data <- cbind(out_data, encoded_aminoacids_pairs_df)
+}
 
 # Zapis do pliku
-file_path <- "data/final_data/final_data_encoded.csv"
+file_path <- "data/final_data/"
+
+if (encode_aminoacids && encode_pairs) {
+    file_path <- paste(file_path, "aaindex123_data_encoded", sep = "")
+} else if (encode_aminoacids) {
+    file_path <- paste(file_path, "aaindex1_data_encoded", sep = "")
+} else if (encode_pairs) {
+    file_path <- paste(file_path, "aaindex23_data_encoded", sep = "")
+}
+
+if (standarized_encoding) {
+    file_path <- paste(file_path, "_standarized.csv", sep = "")
+} else if (normalized_encoding) {
+    file_path <- paste(file_path, "_normalized.csv", sep = "")
+} else {
+    file_path <- paste(file_path, ".csv", sep = "")
+}
 write.table(out_data, file = file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
