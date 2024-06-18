@@ -15,22 +15,33 @@ normalized <- FALSE
 standarizeed <- FALSE
 balance_data <- FALSE
 
-# data_path <- "data/final_data/"
-if (aaindex1 && aaindex2 && aaindex3) {
-
-} else if (aaindex1 && aaindex2) {
-
-} else if (aaindex1 && aaindex3) {
-
-} else if (aaindex2 && aaindex3) {
-
-} else if (aaindex1) {
-
-} else if (aaindex2) {
-
-} else if (aaindex3) {
-
+data_path <- "data/final_data/"
+if (aaindex1 || aaindex2 || aaindex3) {
+    data_path <- paste(data_path, "aaindex", sep = "")
 }
+if (aaindex1) {
+    data_path <- paste(data_path, "1", sep = "")
+}
+if (aaindex2) {
+    data_path <- paste(data_path, "2", sep = "")
+}
+if (aaindex3) {
+    data_path <- paste(data_path, "3", sep = "")
+}
+if (onehotencoded) {
+    data_path <- paste(data_path, "one_hot", sep = "")
+}
+
+data_path <- paste(data_path, "_encoded", sep = "")
+
+if (normalized) {
+    data_path <- paste(data_path, "_normalized", sep = "")
+}
+if (standarizeed) {
+    data_path <- paste(data_path, "_standarized", sep = "")
+}
+
+data_path <- paste(data_path, ".csv", sep = "")
 
 
 
