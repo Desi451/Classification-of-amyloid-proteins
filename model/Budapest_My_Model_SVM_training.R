@@ -43,17 +43,7 @@ if (standarizeed) {
 
 data_path <- paste(data_path, ".csv", sep = "")
 
-
-
-data_path <- "data/final_data/final_data_encoded.csv"
-data_standarized_path <- "data/final_data/final_data_encoded_standarized.csv"
-data_normalized_path <- "data/final_data/final_data_encoded_normalized.csv"
-data_aaindex23_normalized_path <- "data/final_data/aaindex23_data_encoded_normalized.csv"
-data_aaindex1_normalized_path <- "data/final_data/aaindex1_data_encoded_normalized.csv"
-data_one_hot_encoded <- "data/final_data/one_hot_encoded.csv"
-data_aaindex12_normalized_path <- "data/final_data/aaindex12_encoded_normalized.csv"
-data_aaindex13_normalized_path <- "data/final_data/aaindex13_encoded_normalized.csv"
-data_frame <- read.csv2(data_one_hot_encoded, sep = ";", dec = "." , header = TRUE)
+data_frame <- read.csv2(data_path, sep = ";", dec = "." , header = TRUE)
 
 set.seed(103)
 
