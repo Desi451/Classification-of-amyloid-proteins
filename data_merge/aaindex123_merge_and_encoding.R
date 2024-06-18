@@ -3,10 +3,10 @@ data_to_encode <- read.csv2("data/intermediate_data/amino_with_pairs.csv")
 
 # Wybór opcji kodowania
 standarized_encoding <- FALSE
-normalized_encoding <- TRUE
+normalized_encoding <- FALSE
 
 # Co zakodować
-encode_aaindex1 <- TRUE
+encode_aaindex1 <- FALSE
 encode_aaindex2 <- FALSE
 encode_aaindex3 <- TRUE
 
@@ -32,35 +32,23 @@ if (encode_aaindex2 && encode_aaindex3) {
 } else if (encode_aaindex2) {
     pair_encoding_matrix <- aaindex2_encoding_matrix
 } else if (encode_aaindex3) {
-    pair_encoding_matrix <- aaindex2_encoding_matrix
+    pair_encoding_matrix <- aaindex3_encoding_matrix
 }
 
-# Inicializacja zakodowanej macierzy aminokwasów
-coding_vector_length <- nrow(aaindex1_encoding_matrix)
-number_of_aminoacids <- 6
-encoded_aminoacids_df <- data.frame(matrix(nrow = 0, ncol = number_of_aminoacids * coding_vector_length))
-for (i in 1:number_of_aminoacids) {
-    for (j in 1:coding_vector_length) {
-        col_name <- paste("a", as.character(i), "_", as.character(j), sep = "")
-        colnames(encoded_aminoacids_df)[(i - 1) * coding_vector_length + j] <- col_name
-    }
-}
-rm(i, j, col_name, number_of_aminoacids)
-
-# Inicializacja zakodowanej macierzy par aminokwasów
-coding_vector_pairs_length <- nrow(pair_encoding_matrix)
-number_of_aminoacids_pairs <- 5
-encoded_aminoacids_pairs_df <- data.frame(matrix(nrow = 0, ncol = number_of_aminoacids_pairs * coding_vector_pairs_length))
-for (i in 1:number_of_aminoacids_pairs) {
-    for (j in 1:coding_vector_pairs_length) {
-        col_name <- paste("p", as.character(i), "_", as.character(j), sep = "")
-        colnames(encoded_aminoacids_pairs_df)[(i - 1) * coding_vector_pairs_length + j] <- col_name
-    }
-}
-rm(i, j, col_name, number_of_aminoacids_pairs)
-
-# Wypełnianie zakodowanej macierzy aminokwasów
 if (encode_aaindex1) {
+    # Inicializacja zakodowanej macierzy aminokwasów
+    coding_vector_length <- nrow(aaindex1_encoding_matrix)
+    number_of_aminoacids <- 6
+    encoded_aminoacids_df <- data.frame(matrix(nrow = 0, ncol = number_of_aminoacids * coding_vector_length))
+    for (i in 1:number_of_aminoacids) {
+        for (j in 1:coding_vector_length) {
+            col_name <- paste("a", as.character(i), "_", as.character(j), sep = "")
+            colnames(encoded_aminoacids_df)[(i - 1) * coding_vector_length + j] <- col_name
+        }
+    }
+    rm(i, j, col_name, number_of_aminoacids)
+
+    # Wypełnianie zakodowanej macierzy aminokwasów
     aminoacids_separated <- data_to_encode[, 2:7]
     for (i in seq_len(nrow(aminoacids_separated))) {
         print(i)
@@ -74,8 +62,20 @@ if (encode_aaindex1) {
     rm(i, j, beginning_of_insertion, end_of_insertion)
 }
 
-# Wypełnianie zakodowanej macierzy par aminokwasów
 if (encode_aaindex2 || encode_aaindex3) {
+    # Inicializacja zakodowanej macierzy par aminokwasów
+    coding_vector_pairs_length <- nrow(pair_encoding_matrix)
+    number_of_aminoacids_pairs <- 5
+    encoded_aminoacids_pairs_df <- data.frame(matrix(nrow = 0, ncol = number_of_aminoacids_pairs * coding_vector_pairs_length))
+    for (i in 1:number_of_aminoacids_pairs) {
+        for (j in 1:coding_vector_pairs_length) {
+            col_name <- paste("p", as.character(i), "_", as.character(j), sep = "")
+            colnames(encoded_aminoacids_pairs_df)[(i - 1) * coding_vector_pairs_length + j] <- col_name
+        }
+    }
+    rm(i, j, col_name, number_of_aminoacids_pairs)
+
+    # Wypełnianie zakodowanej macierzy par aminokwasów
     pairs_separated <- data_to_encode[, 8:12]
     for (i in seq_len(nrow(pairs_separated))) {
         for (j in seq_len(ncol(pairs_separated))) {
