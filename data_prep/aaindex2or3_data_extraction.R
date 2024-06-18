@@ -1,39 +1,10 @@
-# Ścieżka do pliku tekstowego
-file_path <- "data/raw_data/aaindex2.txt"
-
-# Odczytanie pliku linia po linii
-lines <- readLines(file_path)
-
-# Inicjalizacja zmiennej do przechowywania flagi, czy jesteśmy wewnątrz interesującego nas fragmentu
-inside_section <- FALSE
-
-# Inicjalizacja listy do przechowywania wyodrębnionych fragmentów
-extracted_sections <- list()
-current_section <- c()
-
-# Przetwarzanie każdej linii osobno
-for (line in lines) {
-    if (grepl("^M rows = ARNDCQEGHILKMFPSTWYV, cols = ARNDCQEGHILKMFPSTWYV", line)) {
-        inside_section <- TRUE
-    }
-
-    if (inside_section) {
-        current_section <- c(current_section, line)
-        if (grepl("^//", line)) {
-            inside_section <- FALSE
-            extracted_sections <- append(extracted_sections, list(current_section))
-            current_section <- c()
-        }
-    }
-}
-
-# Przetwarzanie sekcji
+# Funkcja do przetwarzania sekcji
 process_section <- function(section) {
     # Inicjalizacja pustej ramki danych
     df <- data.frame(stringsAsFactors = FALSE)
 
     # Usuń nagłówki
-    section <- section[2:length(section)]
+    section <- section[-1]
 
     # Ustal długość najdłuższego wiersza
     max_length <- max(sapply(strsplit(section, "\\s+"), length))
@@ -59,13 +30,47 @@ process_section <- function(section) {
     return(df)
 }
 
-# Przetwarzanie wszystkich sekcji
-all_data <- do.call(rbind, lapply(extracted_sections, process_section))
 
-# Ścieżka do pliku CSV
-output_csv_path <- "data/intermediate_data/extracted_values_aaindex2.csv"
+file_paths <- c("data/raw_data/aaindex2.txt", "data/raw_data/aaindex3")
 
-# Zapisanie do pliku CSV
-write.csv(all_data, file = output_csv_path, row.names = FALSE, col.names = FALSE)
+# Funkcja do odczytywania i przetwarzania pliku
+process_file <- function(file_path, output_csv_path) {
+    # Odczytanie pliku linia po linii
+    lines <- readLines(file_path)
 
-cat("Wyodrębnione dane zostały zapisane do pliku:", output_csv_path)
+    # Inicjalizacja zmiennej do przechowywania flagi, czy jesteśmy wewnątrz interesującego nas fragmentu
+    inside_section <- FALSE
+
+    # Inicjalizacja listy do przechowywania wyodrębnionych fragmentów
+    extracted_sections <- list()
+    current_section <- c()
+
+    # Przetwarzanie każdej linii osobno
+    for (line in lines) {
+        if (grepl("^M rows = ARNDCQEGHILKMFPSTWYV, cols = ARNDCQEGHILKMFPSTWYV", line)) {
+            inside_section <- TRUE
+        }
+
+        if (inside_section) {
+            current_section <- c(current_section, line)
+            if (grepl("^//", line)) {
+                inside_section <- FALSE
+                extracted_sections <- append(extracted_sections, list(current_section))
+                current_section <- c()
+            }
+        }
+    }
+
+    # Przetwarzanie wszystkich sekcji
+    all_data <- do.call(rbind, lapply(extracted_sections, process_section))
+
+    # Zapisanie do pliku CSV
+    write.csv(all_data, file = output_csv_path, row.names = FALSE, col.names = FALSE)
+}
+
+output_csv_paths <- c("data/intermediate_data/extracted_values_aaindex2.csv", "data/intermediate_data/extracted_values_aaindex3.csv")
+
+# Przetwarzanie plików
+for (i in seq_along(file_paths)) {
+    process_file(file_paths[i], output_csv_paths[i])
+}

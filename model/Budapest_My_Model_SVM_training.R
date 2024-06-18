@@ -2,15 +2,37 @@ library(caTools)
 library(e1071)
 library(caret)
 library(pROC)
+library(MLmetrics)
+library(irr)
 
 save_model <- FALSE
 # Wybór zbioru uczącego
+onehotencoded <- FALSE
 aaindex1 <- FALSE
+aaindex2 <- FALSE
 aaindex3 <- FALSE
-aaindex4 <- FALSE
 normalized <- FALSE
 standarizeed <- FALSE
 balance_data <- FALSE
+
+# data_path <- "data/final_data/"
+if (aaindex1 && aaindex2 && aaindex3) {
+
+} else if (aaindex1 && aaindex2) {
+
+} else if (aaindex1 && aaindex3) {
+
+} else if (aaindex2 && aaindex3) {
+
+} else if (aaindex1) {
+
+} else if (aaindex2) {
+
+} else if (aaindex3) {
+
+}
+
+
 
 data_path <- "data/final_data/final_data_encoded.csv"
 data_standarized_path <- "data/final_data/final_data_encoded_standarized.csv"
@@ -48,17 +70,32 @@ svm_model <- train(Classification ~ .,
 
 prediction <- predict(svm_model, newdata = test_set, type = "prob")
 predicted_classes <- ifelse(prediction[, 2] > 0.5, "amyloid", "non_amyloid")
+predicted_factor <- factor(predicted_classes, levels = c("non_amyloid", "amyloid"))
 
 confusion_matrix <- table(test_set$Classification, predicted_classes)
 print(confusion_matrix)
 
+sens <- sensitivity(predicted_factor, test_set$Classification)
+print(sens)
+
+spec <- specificity(predicted_factor, test_set$Classification)
+print(spec)
+
+prec <- precision(predicted_factor, test_set$Classification)
+print(prec)
+
 accuracy <- sum(predicted_classes == test_set$Classification) / nrow(test_set)
+print(accuracy)
 
 roc_object <- roc(test_set$Classification, as.numeric(prediction[,2]))
 plot(roc_object, col="red", main="ROC curve SVM")
 auc(roc_object)
 
-print(accuracy)
+f1 <- F1_Score(predicted_classes, test_set$Classification)
+print(f1)
+
+golden_kappa <- kappa2(data.frame(test_set$Classification, predicted_classes))
+print(golden_kappa$value)
 
 if (save_model) {
     model_name <- "linear_normalized_aaindex12_c10"
