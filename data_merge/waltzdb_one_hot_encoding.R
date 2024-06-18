@@ -64,11 +64,11 @@ rm(i, j, beginning_of_insertion, end_of_insertion)
 
 # Merging encoded data with normal data
 
-encoded_hexapeptide_df <- hexapeptide_df[, 1:2, drop = FALSE]
+encoded_hexapeptide_df <- hexapeptide_df[, 2, drop = FALSE]
 encoded_hexapeptide_df <- cbind(encoded_hexapeptide_df, encoded_aminoacids_df)
 
 # Saving data
 
-file_path <- "data/final_data/encoded_hexapeptide_data.csv"
+file_path <- "data/final_data/one_hot_encoded.csv"
 write.table(encoded_hexapeptide_df, file = file_path, sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE)
 rm(file_path)

@@ -6,23 +6,33 @@ standarized_encoding <- FALSE
 normalized_encoding <- TRUE
 
 # Co zakodować
-encode_aminoacids <- TRUE
-encode_pairs <- FALSE
+encode_aaindex1 <- TRUE
+encode_aaindex2 <- FALSE
+encode_aaindex3 <- TRUE
 
 if (standarized_encoding) {
     # Wczytanie ustandaryzowanych macierzy kodowania
     aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/aaindex1_standarized.csv", check.names = FALSE)
-    aaindex23_encoding_matrix <- read.csv2("data/intermediate_data/aaindex23_standarized.csv", check.names = FALSE)
+    aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_standarized.csv", check.names = FALSE)
+    aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_standarized.csv", check.names = FALSE)
 } else if (normalized_encoding) {
     # Wczytanie znormalizowanych macierzy kodowania
     aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/aaindex1_normalized.csv", check.names = FALSE)
-    aaindex23_encoding_matrix <- read.csv2("data/intermediate_data/aaindex23_normalized.csv", check.names = FALSE)
+    aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_normalized.csv", check.names = FALSE)
+    aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_normalized.csv", check.names = FALSE)
 } else {
     # Wczytanie macierzy kodowania 
     aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/encoding_matrix_aaindex1.csv", check.names = FALSE)
     aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_encoding_matrix.csv", check.names = FALSE)
     aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_encoding_matrix.csv", check.names = FALSE)
-    aaindex23_encoding_matrix <- rbind(aaindex2_encoding_matrix, aaindex3_encoding_matrix)
+}
+
+if (encode_aaindex2 && encode_aaindex3) {
+    pair_encoding_matrix <- rbind(aaindex2_encoding_matrix, aaindex3_encoding_matrix)
+} else if (encode_aaindex2) {
+    pair_encoding_matrix <- aaindex2_encoding_matrix
+} else if (encode_aaindex3) {
+    pair_encoding_matrix <- aaindex2_encoding_matrix
 }
 
 # Inicializacja zakodowanej macierzy aminokwasów
@@ -38,7 +48,7 @@ for (i in 1:number_of_aminoacids) {
 rm(i, j, col_name, number_of_aminoacids)
 
 # Inicializacja zakodowanej macierzy par aminokwasów
-coding_vector_pairs_length <- nrow(aaindex23_encoding_matrix)
+coding_vector_pairs_length <- nrow(pair_encoding_matrix)
 number_of_aminoacids_pairs <- 5
 encoded_aminoacids_pairs_df <- data.frame(matrix(nrow = 0, ncol = number_of_aminoacids_pairs * coding_vector_pairs_length))
 for (i in 1:number_of_aminoacids_pairs) {
@@ -50,7 +60,7 @@ for (i in 1:number_of_aminoacids_pairs) {
 rm(i, j, col_name, number_of_aminoacids_pairs)
 
 # Wypełnianie zakodowanej macierzy aminokwasów
-if (encode_aminoacids) {
+if (encode_aaindex1) {
     aminoacids_separated <- data_to_encode[, 2:7]
     for (i in seq_len(nrow(aminoacids_separated))) {
         print(i)
@@ -65,14 +75,14 @@ if (encode_aminoacids) {
 }
 
 # Wypełnianie zakodowanej macierzy par aminokwasów
-if (encode_pairs) {
+if (encode_aaindex2 || encode_aaindex3) {
     pairs_separated <- data_to_encode[, 8:12]
     for (i in seq_len(nrow(pairs_separated))) {
         for (j in seq_len(ncol(pairs_separated))) {
             beginning_of_insertion <- j * coding_vector_pairs_length - coding_vector_pairs_length + 1
             end_of_insertion <- j * coding_vector_pairs_length
             pair_to_encode <- pairs_separated[i, j]
-            encoded_aminoacids_pairs_df[i, beginning_of_insertion:end_of_insertion] <- unlist(aaindex23_encoding_matrix[ , pair_to_encode])
+            encoded_aminoacids_pairs_df[i, beginning_of_insertion:end_of_insertion] <- unlist(pair_encoding_matrix[ , pair_to_encode])
         }
     }
     rm(i, j, beginning_of_insertion, end_of_insertion)
@@ -80,23 +90,27 @@ if (encode_pairs) {
 
 # Łączenie wyników kodowań
 out_data <- data.frame(Classification = data_to_encode[, 1])
-if (encode_aminoacids) {
+if (encode_aaindex1) {
     out_data <- cbind(out_data, encoded_aminoacids_df)
 }
-if (encode_pairs) {
+if (encode_aaindex2 || encode_aaindex3) {
     out_data <- cbind(out_data, encoded_aminoacids_pairs_df)
 }
 
 # Zapis do pliku
-file_path <- "data/final_data/"
+file_path <- "data/final_data/aaindex"
 
-if (encode_aminoacids && encode_pairs) {
-    file_path <- paste(file_path, "aaindex123_data_encoded", sep = "")
-} else if (encode_aminoacids) {
-    file_path <- paste(file_path, "aaindex1_data_encoded", sep = "")
-} else if (encode_pairs) {
-    file_path <- paste(file_path, "aaindex23_data_encoded", sep = "")
+if (encode_aaindex1) {
+    file_path <- paste(file_path, "1", sep = "")
 }
+if (encode_aaindex2) {
+    file_path <- paste(file_path, "2", sep = "")
+}
+if (encode_aaindex3) {
+    file_path <- paste(file_path, "3", sep = "")
+}
+
+file_path <- paste(file_path, "_encoded", sep = "")
 
 if (standarized_encoding) {
     file_path <- paste(file_path, "_standarized.csv", sep = "")
