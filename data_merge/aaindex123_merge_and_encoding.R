@@ -6,9 +6,9 @@ standarized_encoding <- FALSE
 normalized_encoding <- FALSE
 
 # Co zakodować
-encode_aaindex1 <- FALSE
+encode_aaindex1 <- TRUE
 encode_aaindex2 <- FALSE
-encode_aaindex3 <- TRUE
+encode_aaindex3 <- FALSE
 
 if (standarized_encoding) {
     # Wczytanie ustandaryzowanych macierzy kodowania
@@ -21,7 +21,7 @@ if (standarized_encoding) {
     aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_normalized.csv", check.names = FALSE)
     aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_normalized.csv", check.names = FALSE)
 } else {
-    # Wczytanie macierzy kodowania 
+    # Wczytanie macierzy kodowania
     aaindex1_encoding_matrix <- read.csv2("data/intermediate_data/encoding_matrix_aaindex1.csv", check.names = FALSE)
     aaindex2_encoding_matrix <- read.csv2("data/intermediate_data/aaindex2_encoding_matrix.csv", check.names = FALSE)
     aaindex3_encoding_matrix <- read.csv2("data/intermediate_data/aaindex3_encoding_matrix.csv", check.names = FALSE)
@@ -56,7 +56,7 @@ if (encode_aaindex1) {
             beginning_of_insertion <- j * coding_vector_length - coding_vector_length + 1
             end_of_insertion <- j * coding_vector_length
             aminoacid_to_encode <- aminoacids_separated[i, j]
-            encoded_aminoacids_df[i, beginning_of_insertion:end_of_insertion] <- unlist(aaindex1_encoding_matrix[ , aminoacid_to_encode])
+            encoded_aminoacids_df[i, beginning_of_insertion:end_of_insertion] <- unlist(aaindex1_encoding_matrix[, aminoacid_to_encode])
         }
     }
     rm(i, j, beginning_of_insertion, end_of_insertion)
@@ -82,7 +82,7 @@ if (encode_aaindex2 || encode_aaindex3) {
             beginning_of_insertion <- j * coding_vector_pairs_length - coding_vector_pairs_length + 1
             end_of_insertion <- j * coding_vector_pairs_length
             pair_to_encode <- pairs_separated[i, j]
-            encoded_aminoacids_pairs_df[i, beginning_of_insertion:end_of_insertion] <- unlist(pair_encoding_matrix[ , pair_to_encode])
+            encoded_aminoacids_pairs_df[i, beginning_of_insertion:end_of_insertion] <- unlist(pair_encoding_matrix[, pair_to_encode])
         }
     }
     rm(i, j, beginning_of_insertion, end_of_insertion)
